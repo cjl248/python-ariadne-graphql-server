@@ -5,6 +5,16 @@ type Query {
   resident_with_id(_id: ID!): Resident
 }
 
+type Mutation {
+  update_resident_name(_id: ID!, _name: String!): updateResidentPayload!
+  update_resident_age(_id: ID!, _age: Int!): updateResidentPayload!
+}
+
+type updateResidentPayload {
+  success: Boolean!
+  resident: Resident
+}
+
 type Building {
  id: ID!
  buildYear: String!
