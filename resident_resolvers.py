@@ -24,3 +24,14 @@ def resolve_residents_in_building(building, info):
             == building['id']
         ]
         return residents
+
+def resolve_resident_family(resident, info):
+    family_residents = []
+    family = resident['family']
+    with open('./data/residents.json') as file:
+        data = json.load(file)
+        for member in family:
+            for resident in data['residents']:
+                if resident['id'] == member:
+                    family_residents.append(resident)
+    return family_residents

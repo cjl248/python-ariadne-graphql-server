@@ -26,6 +26,7 @@ query.set_field('resident_with_id', rr.resident_with_id)
 building.set_field('residents', rr.resolve_residents_in_building)
 
 resident.set_field('building', br.resolve_resident_building)
+resident .set_field('family', rr.resolve_resident_family)
 
 schema = make_executable_schema(type_defs, [query, building, resident])
 
