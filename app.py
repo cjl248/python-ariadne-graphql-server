@@ -1,7 +1,7 @@
 import importlib
 
 from ariadne import graphql_sync, make_executable_schema, load_schema_from_path
-from ariadne import ObjectType, QueryType
+from ariadne import ObjectType, QueryType,  MutationType
 from ariadne.constants import PLAYGROUND_HTML
 from flask import Flask, request, jsonify
 
@@ -13,7 +13,9 @@ app = Flask(__name__)
 
 type_defs = load_schema_from_path('schema.graphql')
 
+# Queries
 query = QueryType()
+
 building = ObjectType('Building')
 resident = ObjectType('Resident')
 
@@ -28,7 +30,15 @@ building.set_field('residents', rr.resolve_residents_in_building)
 resident.set_field('building', br.resolve_resident_building)
 resident .set_field('family', rr.resolve_resident_family)
 
-schema = make_executable_schema(type_defs, [query, building, resident])
+# Mutations
+mutation = MutationType()
+mutation.set_field('update_resident_name', rr.update_resident_name)
+mutation.set_field('update_resident_age', rr.update_resident_age)
+
+update_resident_payload = ObjectType("updateResidentPayload")
+
+
+schema = make_executable_schema(type_defs, [query, mutation, building, resident, update_resident_payload])
 
 
 @app.route('/graphql', methods = ['GET'])
@@ -42,7 +52,8 @@ def graphql_server():
         schema,
         data,
         context_value = None,
-        debug = app.debug
+        debug = True
+        # debug = app.debug
     )
     status_code = 200 if success else 400
     return jsonify(result), status_code
